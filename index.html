@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -659,4 +660,405 @@
     <script src="scripts/crud.js"></script>
     <script src="scripts/modals.js"></script>
 </body>
+=======
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameStore Manager</title>
+    <link rel="stylesheet" href="css/style.css">
+    <!-- Chart.js for dashboard charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Login styles */
+        .login-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--dark-color), var(--primary-color));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-header h1 {
+            color: var(--primary-color);
+            font-size: 32px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .login-header i {
+            font-size: 36px;
+            color: var(--primary-color);
+        }
+
+        .input-field {
+            position: relative;
+            margin-bottom: 25px;
+        }
+
+        .input-field input {
+            width: 100%;
+            padding: 15px 20px;
+            padding-left: 50px;
+            border: 2px solid #e0e0e0;
+            border-radius: 12px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .input-field input:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 4px var(--light-color);
+        }
+
+        .input-field i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 20px;
+            color: var(--primary-color);
+            transition: all 0.3s ease;
+        }
+
+        .input-field input:focus + i {
+            color: var(--secondary-color);
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .login-button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            background: var(--danger-color);
+            color: white;
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        /* Hide dashboard content initially */
+        .dashboard-content {
+            display: none;
+        }
+
+        /* Show dashboard when authenticated */
+        .authenticated .dashboard-content {
+            display: block;
+        }
+
+        .authenticated .login-overlay {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Overlay -->
+    <div class="login-overlay">
+        <div class="login-box">
+            <div class="login-header">
+                <h1>
+                    <i class="fas fa-gamepad"></i>
+                    GameStore
+                </h1>
+            </div>
+
+            <div id="error-message" class="error-message">
+                Invalid username or password!
+            </div>
+
+            <form id="login-form" onsubmit="return handleLogin(event)">
+                <div class="input-field">
+                    <input 
+                        type="text" 
+                        id="username" 
+                        name="username" 
+                        placeholder="Username"
+                        required
+                    >
+                    <i class="fas fa-user"></i>
+                </div>
+
+                <div class="input-field">
+                    <input 
+                        type="password" 
+                        id="password" 
+                        name="password" 
+                        placeholder="Password"
+                        required
+                    >
+                    <i class="fas fa-lock"></i>
+                </div>
+
+                <button type="submit" class="login-button">
+                    Login
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Dashboard Content -->
+    <div class="dashboard-content">
+        <div class="container">
+            <!-- Sidebar -->
+            <nav class="sidebar">
+                <div class="logo">
+                    <h2><i class="fas fa-gamepad"></i> GameStore</h2>
+                </div>
+                <ul class="nav-links">
+                    <li><a href="#" class="active" data-page="dashboard"><i class="fas fa-chart-line"></i> Dashboard</a></li>
+                    <li><a href="#" data-page="games"><i class="fas fa-gamepad"></i> Games</a></li>
+                    <li><a href="#" data-page="consoles"><i class="fas fa-tv"></i> Consoles</a></li>
+                    <li><a href="#" data-page="accessories"><i class="fas fa-headset"></i> Accessories</a></li>
+                    <li><a href="#" data-page="orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                    <li><a href="#" data-page="customers"><i class="fas fa-users-gear"></i> Customers</a></li>
+                </ul>
+            </nav>
+
+            <!-- Main Content -->
+            <main class="main-content">
+                <!-- Top Navigation Bar -->
+                <header class="top-nav">
+                    <div class="search-bar">
+                        <input type="text" placeholder="Search games, consoles...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                    <div class="nav-actions">
+                        <div class="admin-info">
+                            <span class="admin-name">ADMIN</span>
+                            <img src="https://images.unsplash.com/photo-1633332755192-727a05c4013d?w=100&h=100&fit=crop&crop=faces" alt="Admin" class="admin-avatar">
+                        </div>
+                        <select id="language-selector">
+                            <option value="en">English</option>
+                            <option value="fr">French</option>
+                            <option value="ar">Arabic</option>
+                        </select>
+                        <button class="btn-logout" onclick="handleLogout()">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </header>
+
+                <!-- Content Area -->
+                <div id="content" class="content">
+                    <div class="games-section">
+                        <div class="games-header">
+                            <h1 class="games-title">
+                                <i class="fas fa-gamepad"></i>
+                                Games
+                            </h1>
+                            <div class="games-actions">
+                                <button class="create-btn">
+                                    <i class="fas fa-plus"></i>
+                                    Create
+                                </button>
+                                <button class="export-btn">
+                                    <i class="fas fa-file-export"></i>
+                                    Export
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <table class="games-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Name</th>
+                                    <th>Price</th>
+                                    <th>Stock</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>1</td>
+                                    <td>PlayStation 5</td>
+                                    <td>$499.99</td>
+                                    <td>50</td>
+                                    <td class="actions-cell">
+                                        <button class="action-btn edit-btn">
+                                            <i class="fas fa-edit"></i>
+                                            Edit
+                                        </button>
+                                        <button class="action-btn delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>2</td>
+                                    <td>Xbox Series X</td>
+                                    <td>$499.99</td>
+                                    <td>45</td>
+                                    <td class="actions-cell">
+                                        <button class="action-btn edit-btn">
+                                            <i class="fas fa-edit"></i>
+                                            Edit
+                                        </button>
+                                        <button class="action-btn delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>3</td>
+                                    <td>Nintendo Switch</td>
+                                    <td>$299.99</td>
+                                    <td>100</td>
+                                    <td class="actions-cell">
+                                        <button class="action-btn edit-btn">
+                                            <i class="fas fa-edit"></i>
+                                            Edit
+                                        </button>
+                                        <button class="action-btn delete-btn">
+                                            <i class="fas fa-trash"></i>
+                                            Delete
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/database.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/utils.js"></script>
+    <script src="js/i18n.js"></script>
+    <script src="js/dashboard.js"></script>
+    <script src="js/crud.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        // Check authentication status on page load
+        function checkAuth() {
+            const isAuthenticated = localStorage.getItem('isAuthenticated') === 'true';
+            document.body.classList.toggle('authenticated', isAuthenticated);
+            if (isAuthenticated) {
+                // Initialize main service after authentication
+                if (window.main) {
+                    main.navigateToPage('games');
+                }
+            }
+        }
+
+        // Handle login
+        function handleLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            const errorMessage = document.getElementById('error-message');
+
+            if (username.toLowerCase() === 'admin' && password === 'admin') {
+                localStorage.setItem('isAuthenticated', 'true');
+                localStorage.setItem('username', 'ADMIN');
+                
+                const button = document.querySelector('.login-button');
+                button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Logging in...';
+                button.style.background = 'var(--success-color)';
+                
+                setTimeout(() => {
+                    document.body.classList.add('authenticated');
+                    document.querySelector('.admin-name').textContent = 'ADMIN';
+                    // Navigate to games page after login
+                    if (window.main) {
+                        main.navigateToPage('games');
+                    }
+                }, 1000);
+            } else {
+                errorMessage.style.display = 'block';
+                document.getElementById('password').value = '';
+                
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 3000);
+            }
+
+            return false;
+        }
+
+        // Handle logout
+        function handleLogout() {
+            // Clear authentication
+            localStorage.removeItem('isAuthenticated');
+            localStorage.removeItem('username');
+            
+            // Reset form
+            document.getElementById('login-form').reset();
+            
+            // Hide dashboard and show login
+            document.body.classList.remove('authenticated');
+            
+            // Reset login button
+            const button = document.querySelector('.login-button');
+            button.innerHTML = 'Login';
+            button.style.background = 'var(--primary-color)';
+        }
+
+        // Initialize dashboard
+        function initializeDashboard() {
+            if (window.dashboard) {
+                dashboard.initialize();
+            }
+        }
+
+        // Check auth status on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            checkAuth();
+        });
+    </script>
+</body>
+>>>>>>> c289467eb7264b3264c713789cb3b1c454af50ae
 </html> 
