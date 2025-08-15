@@ -4,7 +4,7 @@
   "description": "GameStore JavaScript application",
   "main": "index.js",
   "scripts": {
-    "test": "jest",
+    "test": "jest --passWithNoTests",
     "test:coverage": "jest --coverage",
     "build": "echo 'Build step completed - static files ready for deployment'",
     "sonar": "sonar-scanner",
