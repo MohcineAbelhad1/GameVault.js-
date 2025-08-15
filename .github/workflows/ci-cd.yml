@@ -1,33 +1,25 @@
-name: GameStore CI/CD
+# Simple Pipeline - Deploy GameStore to GitHub Pages
+name: Deploy GameStore
 
+# When to run: every time you push to main branch
 on:
   push:
-    branches: [ main, master ]
+    branches: [ main ]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
+# What it does:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    
     steps:
-    - name: Checkout code
+    
+    # Step 1: Get your code
+    - name: Get code from repository
       uses: actions/checkout@v4
     
-    - name: Setup Pages
-      uses: actions/configure-pages@v3
-      
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v2
-      with:
-        path: .
-        
+    # Step 2: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v2
+      uses: peaceiris/actions-gh-pages@v3
+      with:
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+        publish_dir: .
+        force_orphan: true
