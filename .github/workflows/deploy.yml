@@ -1,25 +1,22 @@
-# Simple Pipeline - Deploy GameStore to GitHub Pages
+# ONE SIMPLE PIPELINE - Deploy GameStore
 name: Deploy GameStore
 
-# When to run: every time you push to main branch
+# Run when you push to main
 on:
   push:
     branches: [ main ]
 
-# What it does:
+# Deploy job
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
     
-    # Step 1: Get your code
-    - name: Get code from repository
+    - name: Get code
       uses: actions/checkout@v4
     
-    # Step 2: Deploy to GitHub Pages
     - name: Deploy to GitHub Pages
       uses: peaceiris/actions-gh-pages@v3
       with:
         github_token: ${{ secrets.GITHUB_TOKEN }}
         publish_dir: .
-        force_orphan: true
