@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GameVault - Your Ultimate Gaming Store</title>
+    <link rel="stylesheet" href="styles/style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Check if user is logged in
+        window.onload = function() {
+            if (localStorage.getItem('isLoggedIn') !== 'true') {
+                window.location.href = 'login.html';
+            }
+        }
+
+        // Add logout function
+        function logout() {
+            localStorage.removeItem('isLoggedIn');
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <nav class="sidebar">
+            <div class="logo">
+                <h2>GameVault</h2>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#dashboard" class="active"><i class="fas fa-home"></i> Dashboard</a></li>
+                <li><a href="#games"><i class="fas fa-gamepad"></i> Games</a></li>
+                <li><a href="#accessories"><i class="fas fa-headset"></i> Accessories</a></li>
+                <li><a href="#consoles"><i class="fas fa-tv"></i> Consoles</a></li>
+                <li><a href="#orders"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+                <li><a href="#users"><i class="fas fa-users"></i> Users</a></li>
+            </ul>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header>
+                <div class="search-bar">
+                    <input type="text" placeholder="Search games...">
+                    <button><i class="fas fa-search"></i></button>
+                </div>
+                <div class="header-right">
+                    <div class="language-selector">
+                        <select id="language">
+                            <option value="en">English</option>
+                            <option value="fr">French</option>
+                            <option value="ar">Arabic</option>
+                        </select>
+                    </div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                        <button onclick="logout()" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Logout
+                        </button>
+                    </div>
+                </div>
+            </header>
+
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="dashboard-section">
+                <div class="dashboard-header">
+                    <h1>Dashboard Overview</h1>
+                    <div class="date-filter">
+                        <button class="btn-filter active" data-period="today"><span>Today</span></button>
+                        <button class="btn-filter" data-period="week"><span>Week</span></button>
+                        <button class="btn-filter" data-period="month"><span>Month</span></button>
+                        <button class="btn-filter" data-period="year"><span>Year</span></button>
+                    </div>
+                </div>
+
+                <div class="stats-cards">
+                    <div class="stat-card primary">
+                        <div class="stat-icon">
+                            <i class="fas fa-gamepad"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Games</h3>
+                            <p class="stat-number">250</p>
+                            <span class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> 12.5%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="stat-card success">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Active Users</h3>
+                            <p class="stat-number">1,234</p>
+                            <span class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> 8.2%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="stat-card warning">
+                        <div class="stat-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Total Sales</h3>
+                            <p class="stat-number">$45,678</p>
+                            <span class="stat-trend positive">
+                                <i class="fas fa-arrow-up"></i> 5.7%
+                            </span>
+                        </div>
+                    </div>
+                    <div class="stat-card info">
+                        <div class="stat-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h3>Revenue</h3>
+                            <p class="stat-number">$32,456</p>
+                            <span class="stat-trend negative">
+                                <i class="fas fa-arrow-down"></i> 2.4%
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dashboard-grid">
+                    <div class="chart-container sales-chart">
+                        <div class="chart-header">
+                            <h3>Sales Overview</h3>
+                            <div class="chart-actions">
+                                <button class="btn-icon"><i class="fas fa-download"></i></button>
+                                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+                        <canvas id="salesChart"></canvas>
+                    </div>
+
+                    <div class="chart-container genre-chart">
+                        <div class="chart-header">
+                            <h3>Genre Distribution</h3>
+                            <div class="chart-actions">
+                                <button class="btn-icon"><i class="fas fa-download"></i></button>
+                                <button class="btn-icon"><i class="fas fa-ellipsis-v"></i></button>
+                            </div>
+                        </div>
+                        <canvas id="genreChart"></canvas>
+                    </div>
+
+                    <div class="recent-activity">
+                        <div class="section-header">
+                            <h3>Recent Activity</h3>
+                            <button class="btn-text">View All</button>
+                        </div>
+                        <div class="activity-list">
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="fas fa-plus-circle"></i></div>
+                                <div class="activity-details">
+                                    <p>New game added: <strong>Cyberpunk 2077</strong></p>
+                                    <span class="activity-time">2 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="fas fa-shopping-cart"></i></div>
+                                <div class="activity-details">
+                                    <p>New order: <strong>FIFA 23</strong></p>
+                                    <span class="activity-time">5 hours ago</span>
+                                </div>
+                            </div>
+                            <div class="activity-item">
+                                <div class="activity-icon"><i class="fas fa-user-plus"></i></div>
+                                <div class="activity-details">
+                                    <p>New user registered</p>
+                                    <span class="activity-time">1 day ago</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="top-games">
+                        <div class="section-header">
+                            <h3>Top Selling Games</h3>
+                            <button class="btn-text">View All</button>
+                        </div>
+                        <div class="games-list">
+                            <div class="game-item">
+                                <img src="https://image.api.playstation.com/vulcan/ap/rnd/202110/2000/phvVT0qZfcRms5qDAk0SI3CM.png" alt="Elden Ring" class="game-thumb">
+                                <div class="game-details">
+                                    <h4>Elden Ring</h4>
+                                    <p>Sales: 1,234</p>
+                                </div>
+                                <div class="game-price">$59.99</div>
+                            </div>
+                            <div class="game-item">
+                                <img src="https://image.api.playstation.com/vulcan/ap/rnd/202207/1210/4xJ8XB3bi888QTLZYdl7Oi0s.png" alt="God of War Ragnarök" class="game-thumb">
+                                <div class="game-details">
+                                    <h4>God of War Ragnarök</h4>
+                                    <p>Sales: 987</p>
+                                </div>
+                                <div class="game-price">$49.99</div>
+                            </div>
+                            <div class="game-item">
+                                <img src="https://image.api.playstation.com/vulcan/ap/rnd/202306/1219/60eca3ac155f0f6c45555b849a8d285a7f33ef5bfb6c0b90.png" alt="Marvel's Spider-Man 2" class="game-thumb">
+                                <div class="game-details">
+                                    <h4>Spider-Man 2</h4>
+                                    <p>Sales: 876</p>
+                                </div>
+                                <div class="game-price">$39.99</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Games Section -->
+            <section id="games" class="games-section hidden">
+                <h1>Games Management</h1>
+                <div class="actions">
+                    <button class="btn-primary" onclick="openAddGameModal()">
+                        <i class="fas fa-plus"></i> Add New Game
+                    </button>
+                    <button class="btn-secondary" onclick="exportToCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+                <div class="games-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Genre</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="gamesTableBody">
+                            <!-- Games will be loaded here dynamically -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Accessories Section -->
+            <section id="accessories" class="accessories-section hidden">
+                <h1>Accessories Management</h1>
+                <div class="actions">
+                    <button class="btn-primary" onclick="openAddAccessoryModal()">
+                        <i class="fas fa-plus"></i> Add New Accessory
+                    </button>
+                    <button class="btn-secondary" onclick="exportAccessoriesToCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+                <div class="games-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="accessoriesTableBody">
+                            <!-- Sample Accessories Data -->
+                            <tr>
+                                <td>Gaming Headset Pro</td>
+                                <td>Audio</td>
+                                <td>$99.99</td>
+                                <td>45</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Elite Controller</td>
+                                <td>Controllers</td>
+                                <td>$179.99</td>
+                                <td>30</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>RGB Gaming Mouse</td>
+                                <td>PC Peripherals</td>
+                                <td>$79.99</td>
+                                <td>60</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Consoles Section -->
+            <section id="consoles" class="consoles-section hidden">
+                <h1>Consoles Management</h1>
+                <div class="actions">
+                    <button class="btn-primary" onclick="openAddConsoleModal()">
+                        <i class="fas fa-plus"></i> Add New Console
+                    </button>
+                    <button class="btn-secondary" onclick="exportConsolesToCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+                <div class="games-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Brand</th>
+                                <th>Price</th>
+                                <th>Stock</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="consolesTableBody">
+                            <!-- Sample Consoles Data -->
+                            <tr>
+                                <td>PlayStation 5</td>
+                                <td>Sony</td>
+                                <td>$499.99</td>
+                                <td>25</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Xbox Series X</td>
+                                <td>Microsoft</td>
+                                <td>$499.99</td>
+                                <td>30</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Nintendo Switch OLED</td>
+                                <td>Nintendo</td>
+                                <td>$349.99</td>
+                                <td>40</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Orders Section -->
+            <section id="orders" class="orders-section hidden">
+                <h1>Orders Management</h1>
+                <div class="actions">
+                    <button class="btn-primary" onclick="openAddOrderModal()">
+                        <i class="fas fa-plus"></i> Add New Order
+                    </button>
+                    <button class="btn-secondary" onclick="exportOrdersToCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+                <div class="games-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Customer</th>
+                                <th>Products</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="ordersTableBody">
+                            <!-- Sample Orders Data -->
+                            <tr>
+                                <td>#ORD001</td>
+                                <td>John Doe</td>
+                                <td>PlayStation 5, FIFA 23</td>
+                                <td>$559.98</td>
+                                <td><span class="status-badge completed">Completed</span></td>
+                                <td>2024-01-20</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD002</td>
+                                <td>Jane Smith</td>
+                                <td>Gaming Headset Pro</td>
+                                <td>$99.99</td>
+                                <td><span class="status-badge pending">Pending</span></td>
+                                <td>2024-01-21</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#ORD003</td>
+                                <td>Mike Johnson</td>
+                                <td>Xbox Series X, Elite Controller</td>
+                                <td>$679.98</td>
+                                <td><span class="status-badge processing">Processing</span></td>
+                                <td>2024-01-21</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Users Section -->
+            <section id="users" class="users-section hidden">
+                <h1>Users Management</h1>
+                <div class="actions">
+                    <button class="btn-primary" onclick="openAddUserModal()">
+                        <i class="fas fa-plus"></i> Add New User
+                    </button>
+                    <button class="btn-secondary" onclick="exportUsersToCSV()">
+                        <i class="fas fa-download"></i> Export CSV
+                    </button>
+                </div>
+                <div class="games-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Name</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Status</th>
+                                <th>Joined Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="usersTableBody">
+                            <!-- Sample Users Data -->
+                            <tr>
+                                <td>#USR001</td>
+                                <td>John Doe</td>
+                                <td>john.doe@email.com</td>
+                                <td><span class="role-badge admin">Admin</span></td>
+                                <td><span class="status-badge active">Active</span></td>
+                                <td>2024-01-01</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USR002</td>
+                                <td>Jane Smith</td>
+                                <td>jane.smith@email.com</td>
+                                <td><span class="role-badge customer">Customer</span></td>
+                                <td><span class="status-badge active">Active</span></td>
+                                <td>2024-01-15</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>#USR003</td>
+                                <td>Mike Johnson</td>
+                                <td>mike.j@email.com</td>
+                                <td><span class="role-badge manager">Manager</span></td>
+                                <td><span class="status-badge inactive">Inactive</span></td>
+                                <td>2024-01-18</td>
+                                <td>
+                                    <button class="btn-primary"><i class="fas fa-edit"></i></button>
+                                    <button class="btn-secondary"><i class="fas fa-trash"></i></button>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Add Game Modal -->
+    <div id="addGameModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Game</h2>
+            <form id="addGameForm">
+                <input type="text" id="gameTitle" placeholder="Title" required>
+                <input type="url" id="gameImageUrl" placeholder="Image URL" required>
+                <div id="gameImagePreview" class="image-preview empty">Image preview will appear here</div>
+                <select id="gameGenre" required>
+                    <option value="" disabled selected>Select Genre</option>
+                    <option value="action">Action</option>
+                    <option value="rpg">RPG</option>
+                    <option value="strategy">Strategy</option>
+                    <option value="sports">Sports</option>
+                </select>
+                <input type="number" id="gamePrice" step="0.01" min="0" placeholder="Price" required>
+                <input type="number" id="gameStock" min="0" placeholder="Stock" required>
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="closeAddGameModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Accessory Modal -->
+    <div id="addAccessoryModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Accessory</h2>
+            <form id="addAccessoryForm">
+                <input type="text" id="accessoryTitle" placeholder="Title" required>
+                <input type="url" id="accessoryImageUrl" placeholder="Image URL" required>
+                <div id="accessoryImagePreview" class="image-preview empty">Image preview will appear here</div>
+                <select id="accessoryCategory" required>
+                    <option value="" disabled selected>Select Category</option>
+                    <option value="audio">Audio</option>
+                    <option value="controllers">Controllers</option>
+                    <option value="pc-peripherals">PC Peripherals</option>
+                    <option value="storage">Storage</option>
+                    <option value="cables">Cables & Adapters</option>
+                </select>
+                <input type="number" id="accessoryPrice" step="0.01" min="0" placeholder="Price" required>
+                <input type="number" id="accessoryStock" min="0" placeholder="Stock" required>
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="closeAddAccessoryModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Console Modal -->
+    <div id="addConsoleModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Console</h2>
+            <form id="addConsoleForm">
+                <input type="text" id="consoleTitle" placeholder="Title" required>
+                <input type="url" id="consoleImageUrl" placeholder="Image URL" required>
+                <div id="consoleImagePreview" class="image-preview empty">Image preview will appear here</div>
+                <select id="consoleBrand" required>
+                    <option value="" disabled selected>Select Brand</option>
+                    <option value="sony">Sony</option>
+                    <option value="microsoft">Microsoft</option>
+                    <option value="nintendo">Nintendo</option>
+                    <option value="other">Other</option>
+                </select>
+                <input type="number" id="consolePrice" step="0.01" min="0" placeholder="Price" required>
+                <input type="number" id="consoleStock" min="0" placeholder="Stock" required>
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="closeAddConsoleModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Order Modal -->
+    <div id="addOrderModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New Order</h2>
+            <form id="addOrderForm">
+                <input type="text" id="orderCustomer" placeholder="Customer Name" required>
+                <select id="orderProducts" multiple required>
+                    <option value="" disabled>Select Products</option>
+                    <option value="ps5">PlayStation 5</option>
+                    <option value="xbox">Xbox Series X</option>
+                    <option value="switch">Nintendo Switch</option>
+                    <option value="headset">Gaming Headset Pro</option>
+                    <option value="controller">Elite Controller</option>
+                </select>
+                <input type="number" id="orderTotal" step="0.01" min="0" placeholder="Total" required>
+                <select id="orderStatus" required>
+                    <option value="" disabled selected>Select Status</option>
+                    <option value="pending">Pending</option>
+                    <option value="processing">Processing</option>
+                    <option value="completed">Completed</option>
+                </select>
+                <div class="button-group">
+                    <button type="submit" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add
+                    </button>
+                    <button type="button" class="btn-secondary" onclick="closeAddOrderModal()">
+                        <i class="fas fa-times"></i> Cancel
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add User Modal -->
+    <div id="addUserModal" class="modal">
+        <div class="modal-content">
+            <h2>Add New User</h2>
+            <form id="addUserForm">
+                <div class="form-group">
+                    <label for="userName">Name</label>
+                    <input type="text" id="userName" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input type="email" id="userEmail" required>
+                </div>
+                <div class="form-group">
+                    <label for="userRole">Role</label>
+                    <select id="userRole" required>
+                        <option value="admin">Admin</option>
+                        <option value="manager">Manager</option>
+                        <option value="customer">Customer</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="userStatus">Status</label>
+                    <select id="userStatus" required>
+                        <option value="active">Active</option>
+                        <option value="inactive">Inactive</option>
+                    </select>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn-primary">Add</button>
+                    <button type="button" class="btn-secondary" onclick="closeAddUserModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="scripts/main.js"></script>
+    <script src="scripts/dashboard.js"></script>
+    <script src="scripts/crud.js"></script>
+    <script src="scripts/modals.js"></script>
+</body>
+</html> 

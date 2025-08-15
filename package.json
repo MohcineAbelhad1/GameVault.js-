@@ -1,0 +1,31 @@
+{
+  "name": "gamestore-js",
+  "version": "1.0.0",
+  "description": "GameStore JavaScript application",
+  "main": "index.js",
+  "scripts": {
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "build": "echo 'Build script - add your build commands here'",
+    "sonar": "sonar-scanner",
+    "lint": "eslint . --ext .js",
+    "lint:fix": "eslint . --ext .js --fix"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "eslint": "^8.56.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.1.3",
+    "jest": "^29.7.0",
+    "prettier": "^3.2.4",
+    "sonarqube-scanner": "^3.3.0"
+  },
+  "jest": {
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov", "html"],
+    "testEnvironment": "node"
+  }
+}
